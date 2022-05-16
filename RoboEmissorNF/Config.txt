@@ -1,0 +1,9 @@
+fat.enviaNF.1412.293
+fat.consumidor.598.326
+fat.imp_ped.225.46
+fat.obs_ped.60.903
+srv.enviaNF.1130.136
+srv.consumidor.321.171
+srv.imp_ped.225.43
+srv.obs_ped.94.581
+semboleto{,1817,1818,1819,1820,1821,1822,1823,1824,1825,1124,1677,1665,1488,1455,}
