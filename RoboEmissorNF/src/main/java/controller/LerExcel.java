@@ -12,7 +12,7 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 
 import model.Pedido;
 
-public class ImagineExcel {
+public class LerExcel {
 	public static List<Pedido> readXLS(String filePath) {
 		try {
 			List<Pedido> listaPedidos = new ArrayList<Pedido>();		

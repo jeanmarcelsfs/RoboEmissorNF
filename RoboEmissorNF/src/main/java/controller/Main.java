@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import model.Pedido;
@@ -32,8 +33,11 @@ public class Main {
 		
 	public static void main(String[] args) {
 		try {
+			JFrame jFrame = new JFrame();
+			jFrame.setLocationRelativeTo(null);
+			jFrame.setVisible(true);
 			
-			JOptionPane.showMessageDialog(null, "Antes de Continuar, verifique a Impressora Pa");
+			JOptionPane.showMessageDialog(jFrame, "Verifique a Impressora Padrao");
 			String[] opPc = {
 					"1 - SERVIDOR\n",
 					"2 - FATURAMENTO (Everton)\n",
@@ -62,16 +66,19 @@ public class Main {
 			tipo_faturamento = jc.getSelectedIndex();
 			System.out.println("Opção selecionada no comboBox: "+tipo_faturamento);
 			
-			if (tipo_faturamento == Main.FINALIZAR_SYS)
-				System.exit(0);
+			if (tipo_faturamento == Main.FINALIZAR_SYS) {
+				jFrame.dispose();
+				System.exit(0);				
+			}
+			
+			LoginSistema.logarSistema("valente","1234");
+			
 			
 			//se for Daki, fazer somente os pedidos
 			if (tipo_faturamento == Main.DAKI) {
 				emiteDaki();
-			} else {
+			} else {	
 				
-				ImagineRobot rb = new ImagineRobot();
-				rb.setAutoDelay(100);
 				loginSistema(rb, "valente","1234");
 				String dirExcel;
 				if (computador == Main.PC_SERV)
@@ -79,7 +86,7 @@ public class Main {
 				else
 					dirExcel = "Z:/";
 				dirExcel += "Faturamento/_faturar.xls";
-				List<Pedido> listaPedidos = ImagineExcel.readXLS(dirExcel);
+				List<Pedido> listaPedidos = LerExcel.readXLS(dirExcel);
 				abreEmissor(rb);
 				Calendar calendar = Calendar.getInstance();
 				
@@ -120,7 +127,7 @@ public class Main {
 	
 	private static void emiteDaki() {
 		try {
-			ImagineRobot r = new ImagineRobot();
+			Robo r = new Robo();
 			loginSistema(r, "VALENTE", "1234");
 			//r.delay(1000);
 			r.keyPress(KeyEvent.VK_F10);
@@ -131,7 +138,7 @@ public class Main {
 			else
 				dirDaki = "Z:/";
 			dirDaki += "Faturamento/_daki.xls";
-			List<Pedido> lsDaki = ImagineExcel.readDAKI(dirDaki);
+			List<Pedido> lsDaki = LerExcel.readDAKI(dirDaki);
 			boolean firstRow = true;
 			r.setAutoDelay(200);
 			for(int i=0; i<lsDaki.size();i++) {
@@ -148,7 +155,7 @@ public class Main {
 				r.hotKey(KeyEvent.VK_SHIFT, KeyEvent.VK_HOME);
 				r.delay(500);
 				//r.keyType(lsDaki.get(i).getCodCliente());
-				ImagineUtil.copyToTransferArea(lsDaki.get(i).getCodCliente());
+				Utilitarios.copyToTransferArea(lsDaki.get(i).getCodCliente());
 				r.hotKey(KeyEvent.VK_CONTROL, KeyEvent.VK_V);
 				r.keyPress(KeyEvent.VK_ENTER);
 				r.keyPress(KeyEvent.VK_ENTER);
@@ -157,7 +164,7 @@ public class Main {
 				//Clique na Observação do Pedido				
 				
 				r.mouseClick(MousePosition.getObsPedX(computador), MousePosition.getObsPedY(computador), InputEvent.BUTTON1_DOWN_MASK);
-				ImagineUtil.copyToTransferArea(lsDaki.get(i).getNumPedido());
+				Utilitarios.copyToTransferArea(lsDaki.get(i).getNumPedido());
 				
 				//r.keyType(lsDaki.get(i).getNumPedido());
 				r.delay(1000);
@@ -204,7 +211,7 @@ public class Main {
 	private static void emitePedido(Pedido pedido) {
 		try {
 			//fecha emissor
-			ImagineRobot r = new ImagineRobot();
+			Robo r = new Robo();
 			r.hotKey(KeyEvent.VK_ALT, KeyEvent.VK_F);
 			r.delay(1000);
 			r.keyPress(KeyEvent.VK_F10);
@@ -235,162 +242,11 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-	}
-
-	private static boolean loginSistema(ImagineRobot rb, String usuario, String senha) {
-		try {
-			
-			rb.delay(1000);
-			rb.keyPress(KeyEvent.VK_WINDOWS);
-			rb.delay(1000);
-			rb.keyType("INFOSIS G");
-			rb.delay(3000);
-			rb.keyPress(KeyEvent.VK_ENTER);
-			rb.delay(10000);
-			rb.setAutoDelay(10);
-			rb.keyType(usuario);
-			rb.keyPress(KeyEvent.VK_ENTER);
-			rb.keyType(senha);
-			rb.keyPress(KeyEvent.VK_ENTER);
-			rb.delay(3000);
-			return true;
-		}
-		catch (Exception ex) {
-			return false;
-		}
-	}	
-	
-	private static boolean abreEmissor(ImagineRobot r) {
-		try {
-			r.keyPress(KeyEvent.VK_F11);
-			r.delay(7000);
-			r.keyPress(KeyEvent.VK_ESCAPE);
-			r.delay(3000);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-	
-	private static boolean criaDiretorio(String caminhoPasta) {
-		try {
-			Path path = Paths.get(caminhoPasta);
-		    if (!Files.exists(path)) {
-		    	
-		    	Files.createDirectory(path);
-		    	System.out.println("New Directory created !   " + caminhoPasta);
-		    } 
-		    else {	    
-		    	System.out.println("Directory already exists");
-		    }
-		    return true;
-		}
-		catch (Exception e) {
-			// TODO: handle exception7
-			JOptionPane.showMessageDialog(null, e.getMessage());
-			e.printStackTrace();
-			return false;
-		}
-	    
-	}
-
-	private static boolean salvarPDF(String diretorio) {
-		try {
-			ImagineRobot r = new ImagineRobot();
-			r.delay(3000);
-			r.keyType("Nota Fiscal");
-			r.keyPress(KeyEvent.VK_F4);
-			r.delay(2000);
-			r.keyPress(KeyEvent.VK_ESCAPE);
-			r.setAutoDelay(10);
-			
-			//Copia para area de transferencia
-			StringSelection stringSelection = new StringSelection(diretorio);
-			Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clpbrd.setContents(stringSelection, null);	
-			
-			//r.keyType(diretorio);
-			r.hotKey(KeyEvent.VK_CONTROL, KeyEvent.VK_V);
-			r.setAutoDelay(50);
-			r.delay(2000);
-			r.keyPress(KeyEvent.VK_ENTER);
-			r.delay(500);
-			r.hotKey(KeyEvent.VK_ALT, KeyEvent.VK_L);
-			r.delay(2000);
-			return true;
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	private static boolean emiteNotaFiscal(Pedido p, String diretorio, int tipoFaturamento) {
-		try {
-			ImagineRobot r = new ImagineRobot();
-			r.delay(1000);
-			r.keyPress(KeyEvent.VK_F10);
-			r.delay(300);
-			r.keyPress(KeyEvent.VK_F8);
-			r.keyType(p.getNumPedido());
-			r.keyPress(KeyEvent.VK_ENTER);
-			r.keyPress(KeyEvent.VK_ENTER);
-			r.keyPress(KeyEvent.VK_ENTER);
-			r.delay(3000);
-			r.keyPress(KeyEvent.VK_ESCAPE);
-			r.hotKey(KeyEvent.VK_ALT, KeyEvent.VK_M);
-			
-			
-			
-			StringSelection stringSelection = new StringSelection(p.getObs() + " - ");
-			Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clpbrd.setContents(stringSelection, null);			
-		    r.hotKey(KeyEvent.VK_CONTROL, KeyEvent.VK_V);
-			
-			
-			
-			
-			//verifica se é consumidor final
-			if(p.getIe().equals("") || p.getIe().equals("ISENTO"))
-				r.mouseClick(MousePosition.getConsumidorX(computador), MousePosition.getConsumidorY(computador), InputEvent.BUTTON1_DOWN_MASK);
-			
-			//envia NF
-			r.mouseClick(MousePosition.getEnviaNFX(computador), MousePosition.getEnviaNFY(computador), InputEvent.BUTTON1_DOWN_MASK);
-			r.delay(2000);
-			r.keyPress(KeyEvent.VK_ENTER);
-			r.keyPress(KeyEvent.VK_ENTER);
-			r.delay(10000);
-			r.hotKey(KeyEvent.VK_ALT, KeyEvent.VK_I);
-			r.delay(1500);
-			r.keyPress(KeyEvent.VK_ENTER);
-			r.delay(3000);
-			if(tipoFaturamento == Main.PDF)
-				salvarPDF(diretorio);			
-			r.keyPress(KeyEvent.VK_ESCAPE);
-			r.delay(7000);
-			r.keyPress(KeyEvent.VK_ESCAPE);
-			r.delay(1000);
-			
-			//lista de clientes não emite boleto
-			String[] cliSemBol = {"1817", "1818", "1819", "1820", "1821", "1822", "1823", "1824", "1825",
-					"1124","1677","1665","1488","1455"};
-			Boolean emite = true;
-			for(int i=0; i<cliSemBol.length;i++)
-				if (cliSemBol[i].equals(p.getCodCliente()))
-					emite = false;
-			if (emite)
-				emiteBoleto(p, tipoFaturamento);
-			return true;
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			return false;
-		}
 	}	
 
 	private static boolean emiteBoleto(Pedido p, int tipoFaturamento) {
 		try {
-			ImagineRobot r = new ImagineRobot();			
+			Robo r = new Robo();			
 			r.hotKey(KeyEvent.VK_ALT, KeyEvent.VK_O);
 			r.delay(2000);
 			r.keyPress(KeyEvent.VK_B);

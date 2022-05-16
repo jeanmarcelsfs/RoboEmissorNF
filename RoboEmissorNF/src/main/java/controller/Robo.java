@@ -2,9 +2,10 @@ package controller;
 
 import java.awt.AWTException;
 import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-public class ImagineRobot {
+public class Robo {
 	private int autoDelay = 50;
 	
 	public void setAutoDelay(int autoDelay) {
@@ -88,12 +89,12 @@ public class ImagineRobot {
 		}
 	}
 	
-	public void mouseClick(int x, int y, int btn) {
+	public void mouseClick(int x, int y) {
 		try {
 			Robot r = new Robot();
 			r.mouseMove(x, y);
-			r.mousePress(btn);
-			r.mouseRelease(btn);			
+			r.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+			r.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);			
 			
 		} catch (Exception e) {
 			// TODO: handle exception
