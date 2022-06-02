@@ -57,14 +57,21 @@ public class PedidosDaki {
 				r.keyPress(KeyEvent.VK_6);
 				r.keyPress(KeyEvent.VK_ENTER);
 				r.delay(1000);
+				Double tmp = Double.parseDouble(lsDaki.get(i).getQtde());
+				tmp = tmp / 0.4;
+				r.keyType(tmp.toString());
+				/*
 				if (lsDaki.get(i).getQtde().equals("25"))
 					r.keyType("10");
 				else if (lsDaki.get(i).getQtde().equals("50"))
+					r.keyType("20");
+				else if (lsDaki.get(i).getQtde().equals("75"))
 					r.keyType("20");
 				else {	
 					JOptionPane.showMessageDialog(null, "Ero ao reconhecer a qtde DAKI");
 					System.exit(0);
 				}
+				*/
 				r.keyPress(KeyEvent.VK_ENTER);
 				r.keyType("35");
 				r.keyPress(KeyEvent.VK_ENTER);				

@@ -197,7 +197,7 @@ public class EmiteNF {
 				s = "05 - Maio";
 				break;
 			case 5:
-				s = "06 - Junho/";
+				s = "06 - Junho";
 				break;
 			case 6:
 				s = "07 - Julho";
