@@ -25,6 +25,7 @@ public class EmiteNF {
 			r.keyPress(KeyEvent.VK_ENTER);
 			r.delay(3000);
 			r.keyPress(KeyEvent.VK_ESCAPE);
+			//obs da NF
 			r.hotKey(KeyEvent.VK_ALT, KeyEvent.VK_M);
 			Utilitarios.copiarParaAreaTransferencia(lista.get(i).getObs());
 			r.hotKey(KeyEvent.VK_CONTROL, KeyEvent.VK_V);
@@ -33,7 +34,10 @@ public class EmiteNF {
 				r.mouseClick(LerConfig.getConsumidorX(computador), LerConfig.getConsumidorY(computador));
 
 			// envia NF
-			r.mouseClick(LerConfig.getEnviaNFX(computador), LerConfig.getEnviaNFY(computador));
+			int posX = LerConfig.getEnviaNFX(computador);
+			int posY = LerConfig.getEnviaNFY(computador);
+			r.mouseClick(posX, posY);
+			System.out.println("Clicou em "+posX+", "+posY);
 			r.delay(2000);
 			r.keyPress(KeyEvent.VK_ENTER);
 			r.keyPress(KeyEvent.VK_ENTER);
