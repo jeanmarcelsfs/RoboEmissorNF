@@ -41,7 +41,7 @@ public class EmiteNF {
 			r.delay(2000);
 			r.keyPress(KeyEvent.VK_ENTER);
 			r.keyPress(KeyEvent.VK_ENTER);
-			r.delay(10000);
+			r.delay(15000);
 			// Imprime
 			r.hotKey(KeyEvent.VK_ALT, KeyEvent.VK_I);
 			r.delay(1500);

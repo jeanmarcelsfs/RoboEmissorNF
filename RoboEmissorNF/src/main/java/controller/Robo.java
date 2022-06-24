@@ -6,7 +6,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class Robo {
-	private int autoDelay = 50;
+	private int autoDelay = 70;
 	
 	public void setAutoDelay(int autoDelay) {
 		this.autoDelay = autoDelay;

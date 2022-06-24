@@ -58,7 +58,7 @@ public class PedidosDaki {
 				r.keyPress(KeyEvent.VK_ENTER);
 				r.delay(1000);
 				Double tmp = Double.parseDouble(lsDaki.get(i).getQtde());
-				tmp = tmp / 0.4;
+				tmp = tmp * 0.4;
 				r.keyType(tmp.toString());
 				/*
 				if (lsDaki.get(i).getQtde().equals("25"))
@@ -72,23 +72,25 @@ public class PedidosDaki {
 					System.exit(0);
 				}
 				*/
+				r.setAutoDelay(50);
 				r.keyPress(KeyEvent.VK_ENTER);
-				r.keyType("35");
+				//VALOR
+				r.keyType("33");
 				r.keyPress(KeyEvent.VK_ENTER);				
 				r.keyPress(KeyEvent.VK_F12);
 				r.delay(500);
 				r.keyType("1234");
 				r.keyPress(KeyEvent.VK_ENTER);
-				r.delay(4000);
+				r.delay(1000);
 				r.keyPress(KeyEvent.VK_TAB);
 				//r.keyType("18"); // 35 Dias
 				r.keyType("20"); // 40 Dias
 				r.hotKey(KeyEvent.VK_ALT, KeyEvent.VK_C);
-				r.delay(2000);
-				r.keyPress(KeyEvent.VK_ESCAPE);
-				r.delay(2000);
+				r.delay(1000);
 				r.keyPress(KeyEvent.VK_ESCAPE);
 				r.delay(1000);
+				r.keyPress(KeyEvent.VK_ESCAPE);
+				r.delay(5000);
 			}
 			JOptionPane.showMessageDialog(null, "TERMINEI OS PEDIDOS");
 		} catch (Exception e) {
